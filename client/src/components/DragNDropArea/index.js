@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useField } from 'formik';
 import styles from './DragArea.module.css';
 import cx from 'classnames';
 
-const DragNDropArea = () => {
+const DragNDropArea = (props) => {
+    const [field, meta, helpers] = useField(props.name);
     const [dragOn, setDragOn] = useState(false);
-    const [inputValue, setInputValue] = useState('');
+    // const [inputValue, setInputValue] = useState('');
 
     const cn = cx(styles['drag-area-container'], {
         [styles['drag-active']]: dragOn
@@ -20,35 +22,39 @@ const DragNDropArea = () => {
 
     const inputChangeHandler = (event) => {
         setDragOn(false);
-        console.dir();
         const fr = new FileReader();
         fr.onload = () => {
-            setInputValue(fr.result);
+            // setInputValue(fr.result);
+            console.log('ON CHANGE');
+            helpers.setValue(fr.result);
         }
         fr.readAsDataURL(event.target.files[0]);
     }
 
     const submitHandler = () => {
-        console.log(inputValue);
+        console.log(field.value);
     }
 
     const clearInput = () => {
-        setInputValue('');
+        // setInputValue('');
+        helpers.setValue('');
     }
 
     const imgPreviewLayout = (<>
-        <img src={inputValue} className={styles['image-preview']} />
-        <button onClick={submitHandler}>Submit</button>
+        <img src={field.value} className={styles['image-preview']} />
         <span>or</span>
         <button onClick={clearInput}>Choose another file</button>
     </>)
 
     const dragNDropLayout = (<>
-            <input type="file" className={styles['drag-input']} onChange={inputChangeHandler}
+            <input type="file" className={styles['drag-input']} 
+                
                 onDragLeave={dragLeaveHandler}
                 onDragOver={dragOverHandler}
+                {...field}
+                onChange={inputChangeHandler}
             />
-            <i class="fas fa-cloud"></i>
+            <i className="fas fa-cloud"></i>
             <h3>Drag&Drop files here</h3>
             <span>or</span>
             <label className={styles['label-button']}>Browse files</label>
@@ -56,7 +62,7 @@ const DragNDropArea = () => {
 
     return (
         <div className={cn}>
-            {inputValue ? imgPreviewLayout : dragNDropLayout}
+            {field.value ? imgPreviewLayout : dragNDropLayout}
         </div >
     );
 }

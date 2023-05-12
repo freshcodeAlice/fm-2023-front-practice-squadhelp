@@ -8,18 +8,22 @@ import ImageUpload from '../InputComponents/ImageUpload/ImageUpload';
 import FormInput from '../FormInput/FormInput';
 import Schems from '../../validators/validationSchems';
 import Error from '../Error/Error';
+import DragNDropArea from '../DragNDropArea';
 
 const OfferForm = (props) => {
   const renderOfferInput = () => {
     if (props.contestType === CONTANTS.LOGO_CONTEST) {
       return (
-        <ImageUpload
-          name="offerData"
-          classes={{
-            uploadContainer: styles.imageUploadContainer,
-            inputContainer: styles.uploadInputContainer,
-            imgStyle: styles.imgStyle,
-          }}
+        // <ImageUpload
+        //   name="offerData"
+        //   classes={{
+        //     uploadContainer: styles.imageUploadContainer,
+        //     inputContainer: styles.uploadInputContainer,
+        //     imgStyle: styles.imgStyle,
+        //   }}
+        // />
+        <DragNDropArea 
+        name="offerData"
         />
       );
     }
@@ -50,7 +54,7 @@ const OfferForm = (props) => {
     resetForm();
   };
 
-  const { valid, addOfferError, clearOfferError } = props;
+  const {  addOfferError, clearOfferError } = props;
   const validationSchema = props.contestType === CONTANTS.LOGO_CONTEST ? Schems.LogoOfferSchema : Schems.TextOfferSchema;
   return (
     <div className={styles.offerContainer}>
@@ -65,7 +69,7 @@ const OfferForm = (props) => {
       >
         <Form className={styles.form}>
           {renderOfferInput()}
-          {valid && <button type="submit" className={styles.btnOffer}>Send Offer</button>}
+         <button type="submit" className={styles.btnOffer}>Send Offer</button>
         </Form>
       </Formik>
     </div>
